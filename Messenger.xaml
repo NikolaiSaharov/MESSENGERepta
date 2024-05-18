@@ -8,19 +8,21 @@
         Title="Messenger" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="112*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="110*"/>
             <ColumnDefinition Width="605*"/>
-            <ColumnDefinition Width="83*"/>
+            <ColumnDefinition Width="82*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="0*"/>
             <RowDefinition Height="214*"/>
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
-        <TextBox x:Name="Soobsheniya" HorizontalAlignment="Left" Margin="2,386,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="481" Height="38" Grid.RowSpan="2" Grid.Column="1"/>
-        <Button x:Name="Otpravka" Content="Отправить" HorizontalAlignment="Left" Margin="533,386,0,0" VerticalAlignment="Top" Height="38" Width="65" Grid.RowSpan="2" Grid.Column="1" Click="Otpravka_Click"/>
-        <ListBox x:Name="AllMesseg" Margin="2,28,7,73" Grid.RowSpan="2" Grid.Column="1"></ListBox>
-        <Button x:Name="Vyhod" Content="Выход" HorizontalAlignment="Left" Margin="10,390,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Grid.Column="2"/>
+        <TextBox x:Name="Soobsheniya" HorizontalAlignment="Left" Margin="2,386,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="481" Height="38" Grid.RowSpan="2" Grid.Column="2"/>
+        <Button x:Name="Otpravka" Content="Отправить" HorizontalAlignment="Left" Margin="533,386,0,0" VerticalAlignment="Top" Height="38" Width="65" Grid.RowSpan="2" Grid.Column="2" Click="Otpravka_Click"/>
+        <ListBox x:Name="AllMesseg" Margin="2,28,7,73" Grid.RowSpan="2" Grid.Column="2"></ListBox>
+        <Button x:Name="Vyhod" Content="Выход" HorizontalAlignment="Left" Margin="10,390,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Grid.Column="3"/>
 
 
     </Grid>

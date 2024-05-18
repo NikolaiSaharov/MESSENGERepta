@@ -7,13 +7,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MESSENGER
 {
@@ -33,22 +26,37 @@ namespace MESSENGER
             cancellationTokenSource = new CancellationTokenSource();
         }
 
-        public async void Start()
+        public async Task Start()
         {
-            server.Start();
-            await Task.Run(() => ListenForClients(cancellationTokenSource.Token), cancellationTokenSource.Token);
+            if (!server.Server.IsBound)
+            {
+                server.Start();
+            }
+            await ListenForClients(cancellationTokenSource.Token);
         }
 
         private async Task ListenForClients(CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                TcpClient client = await server.AcceptTcpClientAsync();
-                clients.Add(client);
-                log.Add($"{DateTime.Now}: Пользователь подключился.");
-                UpdateUserList();
-                UpdateLog();
-                await Task.Run(() => HandleClientComm(client, cancellationToken), cancellationToken);
+                try
+                {
+                    TcpClient client = await server.AcceptTcpClientAsync();
+                    clients.Add(client);
+                    log.Add($"{DateTime.Now}: Пользователь подключился.");
+                    UpdateUserList();
+                    UpdateLog();
+                    _ = HandleClientComm(client, cancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    log.Add($"{DateTime.Now}: Ошибка: {ex.Message}");
+                    UpdateLog();
+                }
             }
         }
 
@@ -58,70 +66,89 @@ namespace MESSENGER
             byte[] message = new byte[65452];
             int bytesRead;
 
-            while (!cancellationToken.IsCancellationRequested)
+            try
             {
-                bytesRead = 0;
-
-                try
+                while (!cancellationToken.IsCancellationRequested)
                 {
+                    bytesRead = 0;
                     bytesRead = await clientStream.ReadAsync(message, 0, 65452, cancellationToken);
-                }
-                catch (OperationCanceledException)
-                {
-                    break;
-                }
-                catch (Exception)
-                {
-                    break;
-                }
 
-                if (bytesRead == 0)
-                {
-                    break;
+                    if (bytesRead == 0)
+                    {
+                        break;
+                    }
+
+                    ASCIIEncoding encoder = new ASCIIEncoding();
+                    string receivedMessage = encoder.GetString(message, 0, bytesRead);
+                    log.Add(receivedMessage);
+
+                    if (receivedMessage.StartsWith("[SYSTEM]"))
+                    {
+                        continue;
+                    }
+
+                    BroadcastMessage(receivedMessage);
                 }
-
-                ASCIIEncoding encoder = new ASCIIEncoding();
-                string receivedMessage = encoder.GetString(message, 0, bytesRead);
-                log.Add(receivedMessage);
-
-                if (receivedMessage.StartsWith("[SYSTEM]"))
-                {
-                    continue;
-                }
-
-                BroadcastMessage(receivedMessage);
             }
-
-            client.Close();
-            clients.Remove(client);
-            log.Add($"{DateTime.Now}: Пользователь отключился.");
-            UpdateUserList();
-            UpdateLog();
+            catch (OperationCanceledException)
+            {
+                // Операция отменена, просто выходим из метода
+            }
+            catch (Exception ex)
+            {
+                log.Add($"{DateTime.Now}: Ошибка при обработке сообщения: {ex.Message}");
+                UpdateLog();
+            }
+            finally
+            {
+                if (client.Connected)
+                {
+                    client.Close();
+                }
+                clients.Remove(client);
+                log.Add($"{DateTime.Now}: Пользователь отключился.");
+                UpdateUserList();
+                UpdateLog();
+            }
         }
 
         private void BroadcastMessage(string message)
         {
             byte[] data = Encoding.ASCII.GetBytes(message);
-            foreach (var client in clients)
+            foreach (var client in clients.ToList()) // ToList() для создания моментального снимка коллекции
             {
-                client.GetStream().Write(data, 0, data.Length);
+                try
+                {
+                    client.GetStream().Write(data, 0, data.Length);
+                }
+                catch (Exception ex)
+                {
+                    log.Add($"{DateTime.Now}: Ошибка при отправке сообщения: {ex.Message}");
+                    UpdateLog();
+                }
             }
         }
 
         private void UpdateUserList()
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            if (SpisokClientov != null)
             {
-                SpisokClientov.Text = string.Join("\n", clients.Select(c => c.Client.RemoteEndPoint.ToString()));
-            });
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    SpisokClientov.Text = string.Join("\n", clients.Select(c => c.Client.RemoteEndPoint.ToString()));
+                });
+            }
         }
 
         private void UpdateLog()
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            if (Soobshenia != null)
             {
-                Soobshenia.Text = string.Join("\n", log);
-            });
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Soobshenia.Text = string.Join("\n", log);
+                });
+            }
         }
 
         public List<string> GetLog()
@@ -132,6 +159,13 @@ namespace MESSENGER
         public void Stop()
         {
             cancellationTokenSource.Cancel();
+            foreach (var client in clients)
+            {
+                if (client.Connected)
+                {
+                    client.Close();
+                }
+            }
             server.Stop();
         }
 

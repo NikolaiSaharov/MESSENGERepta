@@ -7,10 +7,24 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="304" Width="448">
     <Grid Margin="0,0,0,-6">
-        <TextBox x:Name="IpBox" HorizontalAlignment="Center" Margin="0,29,0,0" TextWrapping="Wrap" Text="IP" VerticalAlignment="Top" Width="240" Height="39" BorderBrush="#FFC9CACC" TextChanged="IpBox_TextChanged"/>
-        <Button Content="Создать новый чат" HorizontalAlignment="Center" Margin="0,86,0,0" VerticalAlignment="Top" Height="45" Width="240" Background="#FF9616D4" BorderBrush="#FF696666" Foreground="White" Click="Button_Click"/>
-        <Button Content="Присоединиться к чату" HorizontalAlignment="Center" Margin="0,147,0,0" VerticalAlignment="Top" Height="47" Width="240" Background="#FF9616D4" Foreground="White" Click="Button_Click_1"/>
-        <TextBox x:Name="NameBox" HorizontalAlignment="Center" Margin="0,217,0,0" TextWrapping="Wrap" Text="ИМЯ" VerticalAlignment="Top" Width="240" Height="39" BorderBrush="#FFD4D1D1" TextChanged="NameBox_TextChanged"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="98*"/>
+            <ColumnDefinition Width="248*"/>
+            <ColumnDefinition Width="99*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="36*"/>
+            <RowDefinition Height="34*"/>
+            <RowDefinition Height="35*"/>
+            <RowDefinition Height="26*"/>
+            <RowDefinition Height="16*"/>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="IpBox" HorizontalAlignment="Center" Margin="0,29,0,0" TextWrapping="Wrap" Text="IP" VerticalAlignment="Top" Width="240" Height="39" BorderBrush="#FFC9CACC" TextChanged="IpBox_TextChanged" Grid.Column="2"/>
+        <Button Content="Создать новый чат" HorizontalAlignment="Center" Margin="0,14,0,0" VerticalAlignment="Top" Height="45" Width="240" Background="#FF9616D4" BorderBrush="#FF696666" Foreground="White" Click="Button_Click" Grid.Row="1" Grid.Column="2"/>
+        <Button Content="Присоединиться к чату" HorizontalAlignment="Center" Margin="0,7,0,0" VerticalAlignment="Top" Height="47" Width="240" Background="#FF9616D4" Foreground="White" Click="Button_Click_1" Grid.Row="2" Grid.Column="2"/>
+        <TextBox x:Name="NameBox" HorizontalAlignment="Center" TextWrapping="Wrap" Text="ИМЯ" VerticalAlignment="Center" Width="240" Height="39" BorderBrush="#FFD4D1D1" TextChanged="NameBox_TextChanged" Grid.Row="3" Grid.Column="2"/>
 
     </Grid>
 </Window>

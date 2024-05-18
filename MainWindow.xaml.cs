@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,12 +23,13 @@ namespace MESSENGER
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             Server server = new Server();
             server.Show();
             this.Close();
         }
+
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
@@ -45,11 +47,13 @@ namespace MESSENGER
                 MessageBox.Show("Неверный IP или имя пользователя.");
             }
         }
+
         private bool IsValidIp(string ip)
         {
             IPAddress address;
             return IPAddress.TryParse(ip, out address);
         }
+
         private bool IsValidName(string name)
         {
             return !string.IsNullOrWhiteSpace(name);
@@ -57,12 +61,12 @@ namespace MESSENGER
 
         private void IpBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            // Обработчик события изменения текста в IpBox
         }
 
         private void NameBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            
         }
     }
 }

@@ -6,9 +6,21 @@
         xmlns:local="clr-namespace:MESSENGER"
         mc:Ignorable="d"
         Title="Server" Height="450" Width="800">
-    <Grid OpacityMask="Black" Background="#FFCACACA">
-        <TextBlock x:Name="Soobshenia" HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Center" Height="352" Width="455" Background="White"/>
-        <TextBlock x:Name="SpisokClientov" HorizontalAlignment="Left" Margin="22,41,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="221" Width="65" Background="White"/>
+    <Grid OpacityMask="Black" Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="69*"/>
+            <ColumnDefinition Width="80*"/>
+            <ColumnDefinition Width="461*"/>
+            <ColumnDefinition Width="170*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="33*"/>
+            <RowDefinition Height="366*"/>
+            <RowDefinition Height="35*"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="Soobshenia" HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Center" Height="352" Width="456" Background="#FFF5F1F1" Foreground="#FF333131" Grid.Row="1" Grid.Column="3"/>
+        <TextBlock x:Name="SpisokClientov" HorizontalAlignment="Center" Margin="0,8,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="221" Width="65" Background="#FFF1F1F1" Grid.Row="1" Grid.Column="1"/>
 
     </Grid>
 </Window>
